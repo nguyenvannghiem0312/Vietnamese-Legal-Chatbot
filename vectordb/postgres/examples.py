@@ -23,7 +23,7 @@ if __name__ == "__main__":
         port=port,
         user=user,
     )
-    print("Connect to DB Sucessful")
+    print("Connect to DB Successful")
     conn.autocommit = True
 
     vector_store = PGVectorStore.from_params(
