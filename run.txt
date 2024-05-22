@@ -1,1 +1,2 @@
 python .\dbvector_builder.py --docs-path "NghiemAbe/dev_legal" --file-type "huggingface" --chunk-size 512 --chunk-overlap 256 --vector-store-path "vectordb/chroma"
+streamlit run chatbot/rag_chatbot_app.py -- --model gemma --k 2 --synthesis-strategy create_and_refine
