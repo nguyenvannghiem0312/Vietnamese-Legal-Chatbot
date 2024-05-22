@@ -1,7 +1,7 @@
 from abc import ABC ### Abstract Base Classes
 from typing import Any
 
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 
 class Embedder(ABC):
