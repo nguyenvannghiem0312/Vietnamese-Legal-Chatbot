@@ -13,6 +13,7 @@ langchain==0.2.0
 langchain-community==0.2.0
 llama-index-readers-file==0.1.22
 datasets==2.11.0
+fsspec==2023.9.2
 tqdm==4.66.1
 streamlit==1.29.0
 autoawq==0.2.5
