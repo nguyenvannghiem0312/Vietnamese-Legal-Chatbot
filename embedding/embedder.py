@@ -13,6 +13,7 @@ class Embedder(ABC):
 
 class EmbedderHuggingFace(Embedder):
     def __init__(self,
-                model_name: str = "NghiemAbe/Vi-Legal-Roberta-grad-cache-256-gist",
+                # model_name: str = "NghiemAbe/Vi-Legal-Roberta-grad-cache-256-gist",
+                model_name: str = "bkai-foundation-models/vietnamese-bi-encoder",
                 ):
         self.embedder = HuggingFaceEmbeddings(model_name=model_name)
