@@ -114,9 +114,11 @@ def main(parameters) -> None:
     root_folder = Path(__file__).resolve().parent.parent
     # model_folder = root_folder / "models
     model_folder = "NghiemAbe"
-    vector_store_path = root_folder / "vector_store" / "docs_index"
+    # vector_store_path = root_folder / "vector_store" / "docs_index"
+    vector_store_path = 'vectordb/chroma'
     Path(model_folder).parent.mkdir(parents=True, exist_ok=True)
 
+    vector_store_path = parameters.vector_store_path
     client_name = parameters.client
     model_name = parameters.model
     synthesis_strategy_name = parameters.synthesis_strategy
@@ -220,6 +222,14 @@ def get_args() -> argparse.Namespace:
         const=default_model,
         nargs="?",
         default=default_model,
+    )
+
+    parser.add_argument(
+        "--vector-store-path",
+        type=str,
+        help="The path of vector store.",
+        required=False,
+        default='vectordb/chroma',
     )
 
     parser.add_argument(
