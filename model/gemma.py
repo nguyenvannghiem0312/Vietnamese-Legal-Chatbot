@@ -3,9 +3,9 @@ from model.model import Model
 
 
 class GemmaSettings(Model):
-    url = "/SeaLLM-NghiemAbe7B-v2.5-AWQ"
+    url = "https://huggingface.co/NghiemAbe/SeaLLM-7B-v2.5-AWQ"
     file_name = "SeaLLM-7B-v2.5-AWQ"
-    clients = [LlmClientType.LLM_AWQ]
+    clients = [LlmClientType.VLMM]
     type = "gemma"
     """
     Config:
@@ -45,7 +45,7 @@ class GemmaSettings(Model):
         "mmap": True,
         "mlock": False,
     }
-    system_template = "You are a helpful, respectful and honest assistant."
+    system_template = "Bạn là một trợ lý Luật sư đầy tài năng."
     qa_prompt_template = """<|im_start|>system
 {system}<eos>
 <|im_start|>user
@@ -55,11 +55,11 @@ class GemmaSettings(Model):
     ctx_prompt_template = """<|im_start|>system
 {system}<eos>
 <|im_start|>user
-Context information is below.
+Dưới đây là ngữ cảnh được cung cấp:
 ---------------------
 {context}
 ---------------------
-Given the context information and not prior knowledge, answer the question below:
+Dựa vào thông tin ngữ cảnh, hãy trả lời câu hỏi dưới đây:
 {question}<eos>
 <|im_start|>assistant
 """
