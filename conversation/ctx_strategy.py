@@ -13,6 +13,7 @@ nest_asyncio.apply()
 
 
 class SynthesisStrategyType(Enum):
+    ALL_CONTEXT = "all_context"
     CREATE_AND_REFINE = "create_and_refine"
     TREE_SUMMARIZATION = "tree_summarization"
     ASYNC_TREE_SUMMARIZATION = "async_tree_summarization"
@@ -303,8 +304,46 @@ class AsyncTreeSummarizationStrategy(BaseSynthesisStrategy):
                 num_children=num_children,
             )
 
+class AllContextStrategy(BaseSynthesisStrategy):
+    """
+    Strategy for generating a response using all retrieved contents in a single prompt.
+    """
+
+    def __init__(self, llm: LlmClient):
+        super().__init__(llm)
+
+    def generate_response(
+        self, retrieved_contents: List[Document], question: str, max_new_tokens: int = 512
+    ) -> Union[str, Any]:
+        """
+        Generate a response using all retrieved contents in a single prompt.
+
+        Args:
+            retrieved_contents (List[Document]): List of retrieved contents.
+            question (str): The question or input prompt.
+            max_new_tokens (int, optional): Maximum number of tokens for the generated response. Default is 512.
+
+        Returns:
+            Any: A response generator.
+        """
+        num_of_contents = len(retrieved_contents)
+
+        if num_of_contents > 0:
+            # Combine all retrieved contents into a single context
+            combined_context = "\n\n".join([doc.page_content for doc in retrieved_contents])
+
+            # Generate a prompt using the combined context
+            fmt_prompt = self.llm.generate_ctx_prompt(question=question, context=combined_context)
+        
+            # Generate the response
+            response = self.llm.generate_answer(fmt_prompt, max_new_tokens=max_new_tokens)
+        else:
+            fmt_prompt = self.llm.generate_qa_prompt(question=question)
+            response = self.llm.generate_answer(fmt_prompt, max_new_tokens=max_new_tokens)
+        return response, [fmt_prompt]
 
 STRATEGIES = {
+    SynthesisStrategyType.ALL_CONTEXT.value: AllContextStrategy,
     SynthesisStrategyType.CREATE_AND_REFINE.value: CreateAndRefineStrategy,
     SynthesisStrategyType.TREE_SUMMARIZATION.value: TreeSummarizationStrategy,
     SynthesisStrategyType.ASYNC_TREE_SUMMARIZATION.value: AsyncTreeSummarizationStrategy,
