@@ -1,9 +1,11 @@
 from .ctransformer_client import CtransformersClient
 from .llama_cpp_client import LamaCppClient
 from .llm_awq_client import LlmAWQClient
+from .vllm_client import VLLMClient
 from .llm_client import LlmClientType
 
 SUPPORTED_CLIENTS = {
+    LlmClientType.VLMM.value: VLLMClient,
     LlmClientType.LLM_AWQ.value: LlmAWQClient,
     LlmClientType.CTRANSFORMERS.value: CtransformersClient,
     LlmClientType.LAMA_CPP.value: LamaCppClient,

@@ -20,6 +20,7 @@ class LlmClientType(Enum):
     CTRANSFORMERS = "ctransformers"
     LAMA_CPP = "lama_cpp"
     LLM_AWQ = "llm_awq"
+    VLMM = "vllm"
 
 class LlmClient(ABC):
     """
