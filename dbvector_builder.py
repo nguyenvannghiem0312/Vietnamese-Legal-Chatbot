@@ -14,6 +14,7 @@ import glob
 import json
 from typing import List, Dict, Any
 from datasets import load_dataset
+from pyvi.ViTokenizer import tokenize
 from tqdm import tqdm
 
 from llama_index.core.node_parser import SentenceSplitter
@@ -25,7 +26,7 @@ class Document:
         self.content = content
         self.metadata = metadata or {}
 
-def load_documents(docs_path: str, file_type: str = 'md') -> List[Document]:
+def load_documents(docs_path: str, file_type: str = 'md', vitokenizer: bool = True) -> List[Document]:
     """
     Loads documents from the specified path based on the file type.
 
@@ -74,8 +75,11 @@ def load_documents(docs_path: str, file_type: str = 'md') -> List[Document]:
                     documents.append(Document(content=content, metadata={"source": filepath}))
     elif file_type == 'huggingface':
         dataset = load_dataset(docs_path)['corpus'].to_list()
-        for i in range(len(dataset)):
-            content = str(dataset[i]['corpus'])
+        for i in tqdm(range(len(dataset))):
+            if vitokenizer == True:
+                content = tokenize(str(dataset[i]['corpus']))
+            else:
+                content = str(dataset[i]['corpus'])
             documents.append(Document(content=content, metadata={"source": docs_path, "id": dataset[i]['corpus_id']}))
     else:
         raise ValueError(f"Unsupported file type: {file_type}")
@@ -96,14 +100,14 @@ def split_chunks(sources: List[Document], chunk_size: int = 512, chunk_overlap: 
     """
     chunks = []
 
-    text_parser = SentenceSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    text_parser = SentenceSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap, separator=' ')
     for doc in tqdm(sources, desc="Split corpus"):
         cur_text_chunks = text_parser.split_text(doc.content)
         chunks.extend([Document(content=cur_text_chunk, metadata=doc.metadata) for cur_text_chunk in cur_text_chunks])
     return chunks
 
-def build_memory_index(docs_path: str, file_type: str, vector_store_path: str, chunk_size: int, chunk_overlap: int):
-    sources = load_documents(str(docs_path), file_type=file_type)
+def build_memory_index(docs_path: str, file_type: str, vector_store_path: str, chunk_size: int, chunk_overlap: int, vitokenizer: bool):
+    sources = load_documents(str(docs_path), file_type=file_type, vitokenizer=vitokenizer)
     logger.info(f"Number of Documents: {len(sources)}")
     chunks = split_chunks(sources, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     logger.info(f"Number of Chunks: {len(chunks)}")
@@ -126,6 +130,13 @@ def get_args() -> argparse.Namespace:
         help="The file type of documents. Can be 'txt', 'md', 'json', 'huggingface'",
         required=False,
         default='txt',
+    )
+    parser.add_argument(
+        "--vitokenizer",
+        type=bool,
+        help="Use the Pyvi to Vitokenizer",
+        required=False,
+        default=True,
     )
     parser.add_argument(
         "--chunk-size",
@@ -162,6 +173,7 @@ def main(parameters):
         chunk_size = parameters.chunk_size,
         chunk_overlap = parameters.chunk_overlap,
         vector_store_path = parameters.vector_store_path,
+        vitokenizer= parameters.vitokenizer,
     )
 
 
