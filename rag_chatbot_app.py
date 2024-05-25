@@ -32,9 +32,9 @@ def init_page(root_folder: Path) -> None:
     with left_column:
         st.write(" ")
 
-    with central_column:
-        st.image(str(root_folder / "images/bot.png"), use_column_width="always")
-        st.markdown("""<h4 style='text-align: center; color: grey;'></h4>""", unsafe_allow_html=True)
+    # with central_column:
+    #     st.image(str(root_folder / "images/bot.png"), use_column_width="always")
+    #     st.markdown("""<h4 style='text-align: center; color: grey;'></h4>""", unsafe_allow_html=True)
 
     with right_column:
         st.write(" ")
@@ -149,7 +149,8 @@ def main(parameters) -> None:
                 text="Refining the question and Retrieving the docs – hang tight! " "This should take seconds."
             ):
                 refined_user_input = conversational_retrieval.refine_question(user_input)
-                retrieved_contents, sources = index.similarity_search(query=refined_user_input, k=parameters.k)
+                retrieved_contents, sources = index.similarity_search(query=refined_user_input, k=parameters.k, threshold=-100)
+
                 if retrieved_contents:
                     full_response += "Here are the retrieved text chunks with a content preview: \n\n"
                     message_placeholder.markdown(full_response)
