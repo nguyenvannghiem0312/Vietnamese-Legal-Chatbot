@@ -45,7 +45,7 @@ class VectorMemory:
             The loaded Chroma memory index.
 
         """
-        index = Chroma(persist_directory=str(vector_store_path), embedding_function=self.embedding)
+        index = Chroma(persist_directory=str(vector_store_path), embedding_function=self.embedding, collection_metadata={"hnsw:space": "cosine"})
         return index
 
     def similarity_search(
@@ -87,8 +87,8 @@ class VectorMemory:
                 {
                     "score": round(score, 3),
                     "document": doc.metadata.get("source"),
-                    # "content_preview": f"{doc.page_content[0:150]}...",
-                    "content_preview": f"{doc.page_content}...",
+                    "content_preview": f"{doc.page_content[0:300]}...",
+                    # "content_preview": f"{doc.page_content}...",
                 }
             )
 
