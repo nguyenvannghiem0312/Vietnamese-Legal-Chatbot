@@ -26,7 +26,7 @@ class Document:
         self.content = content
         self.metadata = metadata or {}
 
-def load_documents(docs_path: str, file_type: str = 'md', vitokenizer: bool = True) -> List[Document]:
+def load_documents(docs_path: str, file_type: str = 'md', vitokenizer: bool = False) -> List[Document]:
     """
     Loads documents from the specified path based on the file type.
 
@@ -74,13 +74,13 @@ def load_documents(docs_path: str, file_type: str = 'md', vitokenizer: bool = Tr
                     content = json.dumps(data)
                     documents.append(Document(content=content, metadata={"source": filepath}))
     elif file_type == 'huggingface':
-        dataset = load_dataset(docs_path)['corpus'].to_list()
+        dataset = load_dataset(docs_path)['corpus_seg'].to_list()
         for i in tqdm(range(len(dataset))):
             if vitokenizer == True:
                 content = tokenize(str(dataset[i]['corpus']))
             else:
-                content = str(dataset[i]['corpus'])
-            documents.append(Document(content=content, metadata={"source": docs_path, "id": dataset[i]['corpus_id']}))
+                content = dataset[i]['id'] + '\n' + dataset[i]['article'] + '\n' + dataset[i]['content']
+            documents.append(Document(content=content, metadata={"source": docs_path, "id": dataset[i]['id_raw']}))
     else:
         raise ValueError(f"Unsupported file type: {file_type}")
 
@@ -133,10 +133,10 @@ def get_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--vitokenizer",
-        type=bool,
+        type=int,
         help="Use the Pyvi to Vitokenizer",
         required=False,
-        default=True,
+        default=0,
     )
     parser.add_argument(
         "--chunk-size",
@@ -173,7 +173,7 @@ def main(parameters):
         chunk_size = parameters.chunk_size,
         chunk_overlap = parameters.chunk_overlap,
         vector_store_path = parameters.vector_store_path,
-        vitokenizer= parameters.vitokenizer,
+        vitokenizer= True if parameters.vitokenizer != 0 else False,
     )
 
 
