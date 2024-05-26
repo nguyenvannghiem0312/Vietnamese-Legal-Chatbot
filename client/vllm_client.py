@@ -17,7 +17,7 @@ class VLLMClient(LlmClient):
         super().__init__(model_folder, model_settings)
 
     def _load_llm(self) -> Any:
-        llm = LLM(model=str(self.model_path), quantization="AWQ", dtype=torch.float16, gpu_memory_utilization=0.5, enforce_eager=True, max_model_len=2048)
+        llm = LLM(model=str(self.model_path), quantization="AWQ", dtype=torch.float16, gpu_memory_utilization=0.5, enforce_eager=True, max_model_len=4096)
         return llm
 
     def _load_tokenizer(self) -> Any:
@@ -34,7 +34,7 @@ class VLLMClient(LlmClient):
         Returns:
             str: The generated answer.
         """
-        sampling_params = SamplingParams(temperature=0.8, top_p=0.95)
+        sampling_params = SamplingParams(temperature=0.8, top_p=0.95, max_tokens=512)
 
         prompt_none_pyvi = prompt.replace('_', ' ')
         outputs = self.llm.generate(prompt_none_pyvi, sampling_params)
