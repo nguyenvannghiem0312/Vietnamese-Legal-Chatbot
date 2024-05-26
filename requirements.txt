@@ -15,6 +15,7 @@ llama-index-readers-file==0.1.22
 datasets==2.11.0
 fsspec==2023.9.2
 tqdm==4.66.1
+pyvi==0.1.1
 streamlit==1.29.0
 autoawq@https://github.com/casper-hansen/AutoAWQ/releases/download/v0.2.5/autoawq-0.2.5+cu118-cp39-cp39-linux_x86_64.whl
 https://github.com/vllm-project/vllm/releases/download/v0.4.2/vllm-0.4.2+cu118-cp39-cp39-manylinux1_x86_64.whl --extra-index-url https://download.pytorch.org/whl/cu118
