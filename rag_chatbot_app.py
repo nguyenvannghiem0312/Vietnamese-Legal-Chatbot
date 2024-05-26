@@ -3,6 +3,7 @@ import sys
 import time
 from pathlib import Path
 
+from pyvi.ViTokenizer import tokenize
 import streamlit as st
 
 from client.client_setting import get_client, get_clients
@@ -148,7 +149,8 @@ def main(parameters) -> None:
             with st.spinner(
                 text="Refining the question and Retrieving the docs – hang tight! " "This should take seconds."
             ):
-                refined_user_input = conversational_retrieval.refine_question(user_input)
+                # refined_user_input = conversational_retrieval.refine_question(user_input)
+                refined_user_input = tokenize(user_input)
                 retrieved_contents, sources = index.similarity_search(query=refined_user_input, k=parameters.k, threshold=-100)
 
                 if retrieved_contents:
