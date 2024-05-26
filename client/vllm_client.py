@@ -35,7 +35,9 @@ class VLLMClient(LlmClient):
             str: The generated answer.
         """
         sampling_params = SamplingParams(temperature=0.8, top_p=0.95)
-        outputs = self.llm.generate(prompt, sampling_params)
+
+        prompt_none_pyvi = prompt.replace('_', ' ')
+        outputs = self.llm.generate(prompt_none_pyvi, sampling_params)
 
         for output in outputs:
             prompt = output.prompt
@@ -56,7 +58,8 @@ class VLLMClient(LlmClient):
             str: The generated answer.
         """
         sampling_params = SamplingParams(temperature=0.8, top_p=0.95)
-        outputs = self.llm.generate(prompt, sampling_params)
+        prompt_none_pyvi = prompt.replace('_', ' ')
+        outputs = self.llm.generate(prompt_none_pyvi, sampling_params)
 
         for output in outputs:
             prompt = output.prompt
