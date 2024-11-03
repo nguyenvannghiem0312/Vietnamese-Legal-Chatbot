@@ -87,4 +87,4 @@ The application will open in a browser, and you can start entering queries to re
 
 ## Contact
 
-For more information, please contact [Nguyễn Văn Nghiêm](mailto:nguyenvannghiem0312@gmail.com).
+For more information, please contact nguyenvannghiem0312@gmail.com.
