@@ -16,4 +16,5 @@ class EmbedderHuggingFace(Embedder):
                 # model_name: str = "NghiemAbe/Vi-Legal-Roberta-grad-cache-256-gist",
                 model_name: str = "bkai-foundation-models/vietnamese-bi-encoder",
                 ):
-        self.embedder = HuggingFaceEmbeddings(model_name=model_name)
+
+        self.embedder = HuggingFaceEmbeddings(model_name=model_name, model_kwargs={'token': 'hf_PU...'})
